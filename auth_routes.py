@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordRequestForm
-auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
+auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 def create_token(user_id, token_duration=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
     expiration_data = datetime.now(timezone.utc) + token_duration
@@ -36,13 +36,15 @@ async def authentication():
 
 
 @auth_router.post("/")
-async def createAccount(user_schema: UserSchema, session: Session = Depends(get_session)):
+async def createAccount(user_schema: UserSchema, session: Session = Depends(get_session), user: User = Depends(token_verifier)):
     """
     Rota para criar uma conta no sistema
     """
     user = session.query(User).filter(User.email == user_schema.email).first()
     if user:
         raise HTTPException(status_code=400, detail="Usuário ja cadastrado")
+    elif not user.is_admin and user_schema.is_admin:
+        raise HTTPException(status_code=400, detail=" Vocês não tem permissão para criar um admin")
     else:
         hashed_password = bcrypt_context.hash(user_schema.password)
         new_user = User(
@@ -50,7 +52,7 @@ async def createAccount(user_schema: UserSchema, session: Session = Depends(get_
             user_schema.email,
             hashed_password,
             user_schema.is_active,
-            user_schema.is_active,
+            user_schema.is_admin,
         )
         session.add(new_user)
         session.commit()
