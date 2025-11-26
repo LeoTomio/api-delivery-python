@@ -4,7 +4,7 @@ py -m venv venv (cria o ambiente)
 
 source venv/Scripts/activate (ativa o ambiente)
 
-pip install fastapi uvicorn sqlalchemy passlib[bcrypt] python-jose[cryptography] python-dotenv python-multipart (instala todas as bibliotecas dentro do ambiente)
+pip install fastapi uvicorn sqlalchemy passlib[bcrypt] python-jose[cryptography] python-dotenv python-multipart alembic (instala todas as bibliotecas dentro do ambiente)
 
 pip freeze > requirements.txt (copia as bibliotecas instaladas para o arquivo requirements.txt)
 
@@ -30,6 +30,11 @@ e altera isso o target_metadata para isso:
 from models import Base
 target_metadata = Base.metadata
 
+# OBSERVAÇÕES
+o bcrypt fica com erro, então ´preciso executar os comandos:
+
+pip uninstall bcrypt
+pip install bcrypt==4.0.1
 
 # Anotações
 
