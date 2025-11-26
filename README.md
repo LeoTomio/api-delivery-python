@@ -31,10 +31,16 @@ from models import Base
 target_metadata = Base.metadata
 
 # OBSERVAÇÕES
-o bcrypt fica com erro, então ´preciso executar os comandos:
 
-pip uninstall bcrypt
-pip install bcrypt==4.0.1
+### Bcrypt fica com erro, então ´preciso executar os comandos:
+* pip uninstall bcrypt
+* pip install bcrypt==4.0.1
+
+### Caso não reconheça as bibliotecas
+
+* ctrl + shift + p
+* digite Python: Select interpreter
+* selecione o que esta dentro da pasta venv
 
 # Anotações
 
