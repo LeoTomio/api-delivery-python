@@ -27,14 +27,6 @@ def user_autentication(email, password, session):
     return user
 
 
-@auth_router.get("/")
-async def authentication():
-    """
-    Rota para fazer o login no sistema
-    """
-    return {"message": "Rota de autenticação", "authentication": False}
-
-
 @auth_router.post("/")
 async def createAccount(user_schema: UserSchema, session: Session = Depends(get_session), user: User = Depends(token_verifier)):
     """
@@ -80,7 +72,7 @@ async def login(login_schema: LoginSchema, session: Session = Depends(get_sessio
 @auth_router.post("/login-docs")
 async def login_docs(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
     """
-    Rota de login, onde será gerado o token de autenticação
+    Rota de login do painel /docs, onde será gerado o token de autenticação
     """
     user = user_autentication(form_data.username, form_data.password, session)
     if not user:
@@ -95,6 +87,9 @@ async def login_docs(form_data: OAuth2PasswordRequestForm = Depends(), session: 
 
 @auth_router.get("/refresh")
 async def use_refresh_token(user: User = Depends(token_verifier)):
+    """
+    Rota para usar o refresh token
+    """
     access_token = create_token(user.id)
     return {
         "access_token": access_token,
